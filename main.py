@@ -1,8 +1,7 @@
 from Veiculo import Carro, Mota, Bicicleta
 
-#vamos criar uma lista de veiculos
 frota = []
-#vamos criar um veiculo de cada tipo
+
 a = Carro()
 b = Carro()
 c = Carro()
@@ -35,5 +34,3 @@ if __name__ == '__main__':
             case "2":
                 flag = False
                 break
-
-
