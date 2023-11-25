@@ -1,16 +1,39 @@
-# This is a sample Python script.
+from Veiculo import Carro, Mota, Bicicleta
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+#vamos criar uma lista de veiculos
+frota = []
+#vamos criar um veiculo de cada tipo
+a = Carro()
+b = Carro()
+c = Carro()
+d = Mota()
+e = Mota()
+f = Bicicleta()
+g = Bicicleta()
+
+frota.append(a)
+frota.append(b)
+frota.append(c)
+frota.append(d)
+frota.append(e)
+frota.append(f)
+frota.append(g)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    # vamos criar um for para percorrer a lista de frota
+    for v in frota:
+        v.display()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # Menu de opções
+    flag = True
+    while flag:
+        match(input()):
+            case "1":
+                print("Hello")
+                break
+            case "2":
+                flag = False
+                break
+
+
