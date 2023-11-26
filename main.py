@@ -1,4 +1,5 @@
 from Controler.Frota import *
+from Controler.Servico import *
 from View.Menus import *
 from View.Consulta_frota import *
 
@@ -8,10 +9,10 @@ import os
 # ==============================
 
 frota = []
-encomendas = []
+servico = []
 
 # Frota default (1 carro, 2 Motas, 3 Bikes)
-sys_default(frota)
+sys_default_frota(frota)
 
 # ==============================
 # ==============================SYS INIT END
@@ -63,11 +64,11 @@ if __name__ == '__main__':
                     match (input()):
 
                         case "1":
-                            adicionar_Enc(frota)
+                            criar_Serv(servico)
                         case "2":
-                            remover_Enc(frota)
+                            remover_Serv(servico)
                         case "3":
-                            mostra_Enc(frota)
+                            mostra_Serv(servico)
                         case "4":
                             flag_enc = False
                         case _:

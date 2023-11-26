@@ -50,14 +50,14 @@ def remover_frota(frota):
         v.display()
     print("Qual o Id a remover?")
     id_rem = int(input())
-    i = 1
+    i = 0
     for v in frota:
-        i += 1
         if v.get_id() == id_rem:
             frota = frota.pop(i)
+        i += 1
 
 
-def sys_default(frota):
+def sys_default_frota(frota):
     criar_frota("Carro", 1, frota)
     criar_frota("Mota", 2, frota)
     criar_frota("Bicicleta", 3, frota)

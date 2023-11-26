@@ -2,7 +2,7 @@ import os
 
 
 def print_Menu_Main():
-    print("==========Bem Vindo ao Sistema de Eco-Route Solver==========")
+    print("==========Bem Vindo ao Sistema da Eco-Route Solver==========")
     print("1 ==> Opções Frota")
     print("2 ==> Opções Encomendas")
     print("3 ==> Sair")
@@ -17,7 +17,7 @@ def print_Menu_Frota():
 
 
 def print_Menu_Encomenda():
-    print("==========Opções de Encomendas==========")
+    print("==========Opções de Serviços==========")
     print("1 ==> Adicionar a Encomendas")
     print("2 ==> Remover de Encomendas")
     print("3 ==> Consultar Encomendas")
