@@ -1,36 +1,81 @@
-from Veiculo import Carro, Mota, Bicicleta
+from Controler.Frota import *
+from View.Menus import *
+from View.Consulta_frota import *
+
+import os
+
+# ==============================SYS INIT
+# ==============================
 
 frota = []
+encomendas = []
 
-a = Carro()
-b = Carro()
-c = Carro()
-d = Mota()
-e = Mota()
-f = Bicicleta()
-g = Bicicleta()
+# Frota default (1 carro, 2 Motas, 3 Bikes)
+sys_default(frota)
 
-frota.append(a)
-frota.append(b)
-frota.append(c)
-frota.append(d)
-frota.append(e)
-frota.append(f)
-frota.append(g)
-
+# ==============================
+# ==============================SYS INIT END
 
 if __name__ == '__main__':
     # vamos criar um for para percorrer a lista de frota
-    for v in frota:
-        v.display()
 
     # Menu de opções
     flag = True
+    flag_frota = True
+    flag_enc = True
+
     while flag:
-        match(input()):
-            case "1":
-                print("Hello")
-                break
-            case "2":
+
+        clear()
+        flag_frota = True
+        flag_enc = True
+        print_Menu_Main()
+
+        match (input()):
+
+            case "1": # Menu Principal ==> Opções Frota
+
+                while flag_frota:
+
+                    clear()
+                    print_Menu_Frota()
+
+                    match(input()):
+
+                        case "1":
+                            adicionar_frota_ui(frota)
+                        case "2":
+                            remover_frota(frota)
+                        case "3":
+                            mostra_frota(frota)
+                        case "4":
+                            flag_frota = False
+                        case _:
+                            invalid()
+
+            case "2": # Menu Principal ==> Opções Encomendas
+
+                while flag_enc:
+
+                    clear()
+                    print_Menu_Encomenda()
+
+                    match (input()):
+
+                        case "1":
+                            adicionar_Enc(frota)
+                        case "2":
+                            remover_Enc(frota)
+                        case "3":
+                            mostra_Enc(frota)
+                        case "4":
+                            flag_enc = False
+                        case _:
+                            invalid()
+
+            case "3": # Menu Principal ==> Opção Sair
+
                 flag = False
-                break
+
+            case _:
+                invalid()
