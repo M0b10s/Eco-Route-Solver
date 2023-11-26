@@ -1,9 +1,11 @@
 from Controler.Frota import *
 from Controler.Servico import *
 
+from View.Consulta_grafo import *
 from View.Consulta_Servico import *
 from View.Menus import *
 from View.Consulta_frota import *
+from View import *
 
 import os
 
@@ -78,7 +80,10 @@ if __name__ == '__main__':
                         case _:
                             invalid()
 
-            case "3": # Menu Principal ==> Opção Sair
+            case "3":
+                consulta_grafo()
+
+            case "4": # Menu Principal ==> Opção Sair
 
                 flag = False
 
