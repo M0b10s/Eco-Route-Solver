@@ -1,5 +1,7 @@
 from Controler.Frota import *
 from Controler.Servico import *
+
+from View.Consulta_Servico import *
 from View.Menus import *
 from View.Consulta_frota import *
 
@@ -68,7 +70,7 @@ if __name__ == '__main__':
                         case "2":
                             remover_Serv(servico)
                         case "3":
-                            mostra_Serv(servico)
+                            mostra_servico(servico)
                         case "4":
                             flag_enc = False
                         case _:
