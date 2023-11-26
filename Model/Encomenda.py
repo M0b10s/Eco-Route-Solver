@@ -1,7 +1,7 @@
 class Encomenda:
     last_id = 1
 
-    def __init__(self, id, peso, destino):
+    def __init__(self, peso, destino):
         self.id = id
         self.peso = peso
         self.destino = destino
@@ -14,5 +14,5 @@ class Encomenda:
               f"Destino: {self.destino}")
 
     def get_id(self):
-        return self.last_id
+        return self.id
 
