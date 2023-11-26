@@ -5,7 +5,8 @@ def print_Menu_Main():
     print("==========Bem Vindo ao Sistema da Eco-Route Solver==========")
     print("1 ==> Opções Frota")
     print("2 ==> Opções Encomendas")
-    print("3 ==> Sair")
+    print("3 ==> Consultar Grafo")
+    print("4 ==> Sair")
 
 
 def print_Menu_Frota():
