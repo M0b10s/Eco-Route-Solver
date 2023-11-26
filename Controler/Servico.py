@@ -1,9 +1,11 @@
 from Model.Encomenda import *
 from View.Menus import spacer, siga
 
+import random
+import math
+
 
 def criar_Serv(servico):
-    global dest
     spacer()
     try:
         peso = 0
@@ -41,3 +43,22 @@ def remover_Serv(servicos):
         if v.get_id() == id_rem:
             servicos = servicos.pop(i)
         i += 1
+
+
+def gera_n_rand(servico):
+    try:
+        n = 0
+        print("Quantas Encomendas deseja gerar?")
+        n = int(input())
+    except ValueError:
+        print("Input inválido. Adição de Encomenda cancelada, Voltando ao menu principal")
+        siga()
+        input()
+
+    for i in range(n):
+        # Gera peso com distribuição exponencial negativa
+        peso = round(-math.log(random.random()) * 10) + 1
+
+        dest = random.randint(1, 12)
+        e = Encomenda(peso,dest)
+        servico.append(e)

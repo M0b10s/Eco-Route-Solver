@@ -21,7 +21,8 @@ def print_Menu_Encomenda():
     print("1 ==> Adicionar a Encomendas")
     print("2 ==> Remover de Encomendas")
     print("3 ==> Consultar Encomendas")
-    print("4 ==> Sair de Opções de Encomendas")
+    print("4 ==> Gerar 'n' Encomendas Random")
+    print("5 ==> Sair de Opções de Encomendas")
 
 
 def invalid():

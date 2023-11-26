@@ -72,6 +72,8 @@ if __name__ == '__main__':
                         case "3":
                             mostra_servico(servico)
                         case "4":
+                            gera_n_rand(servico)
+                        case "5":
                             flag_enc = False
                         case _:
                             invalid()
