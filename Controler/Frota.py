@@ -58,6 +58,25 @@ def remover_frota(frota):
 
 
 def sys_default_frota(frota):
-    criar_frota("Carro", 1, frota)
+    criar_frota("Carro", 1, frota,)
     criar_frota("Mota", 2, frota)
     criar_frota("Bicicleta", 3, frota)
+
+
+def organiza_frota(frota):
+    frota_bicicleta = []
+    frota_mota = []
+    frota_carro = []
+
+    for f in frota:
+        if isinstance(f, Bicicleta):
+            frota_bicicleta.append(f)
+        elif isinstance(f, Mota):
+            frota_mota.append(f)
+        elif isinstance(f, Carro):
+            frota_carro.append(f)
+
+    frota.clear()
+    frota.extend(frota_bicicleta)
+    frota.extend(frota_mota)
+    frota.extend(frota_carro)

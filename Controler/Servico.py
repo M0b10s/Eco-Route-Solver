@@ -28,7 +28,47 @@ def criar_Serv(servico):
         siga()
         input()
 
-    e = Encomenda(peso, dest)
+    try:
+        comprimento = 0
+        while comprimento < 1 or comprimento > 160:
+            print("Qual o comprimento da sua Encomenda?(1<=comprimento<=160)")
+            comprimento = int(input())
+    except ValueError:
+        print("Input inválido. Adição de Encomenda cancelada, Voltando ao menu principal")
+        siga()
+        input()
+
+    try:
+        largura = 0
+        while largura < 1 or largura > 140:
+            print("Qual a largura da sua Encomenda?(1<=largura<=140)")
+            largura = int(input())
+    except ValueError:
+        print("Input inválido. Adição de Encomenda cancelada, Voltando ao menu principal")
+        siga()
+        input()
+
+    try:
+        altura = 0
+        while altura < 1 or altura > 110:
+            print("Qual a altura da sua Encomenda?(1<=altura<=110)")
+            altura = int(input())
+    except ValueError:
+        print("Input inválido. Adição de Encomenda cancelada, Voltando ao menu principal")
+        siga()
+        input()
+
+    try:
+        tempoEntrega = 0
+        while tempoEntrega < 1 or tempoEntrega > 24:
+            print("Qual é o tempo de entrega da sua Encomenda?(1<=tempoEntrega<=24)")
+            tempoEntrega = int(input())
+    except ValueError:
+        print("Input inválido. Adição de Encomenda cancelada, Voltando ao menu principal")
+        siga()
+        input()
+
+    e = Encomenda(peso, dest, comprimento, largura, altura, tempoEntrega * 60)
 
     servico.append(e)
 
@@ -58,7 +98,11 @@ def gera_n_rand(servico):
     for i in range(n):
         # Gera peso com distribuição exponencial negativa
         peso = round(-math.log(random.random()) * 10) + 1
-
         dest = random.randint(1, 12)
-        e = Encomenda(peso,dest)
+        altura = random.randint(1, 110)
+        comprimento = random.randint(1, 160)
+        largura = random.randint(1, 140)
+        tempoEntrega = random.randint(1, 1440)
+
+        e = Encomenda(peso, dest, comprimento, largura, altura, tempoEntrega)
         servico.append(e)

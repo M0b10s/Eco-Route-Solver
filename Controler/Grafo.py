@@ -6,6 +6,48 @@ import networkx as nx  # biblioteca de tratamento de grafos necessária para des
 import matplotlib.pyplot as plt  # idem
 
 
+def cria_grafo():
+    g = Grafo()
+
+    g.add_edge("1", "2", 1500)
+    g.add_edge("1", "3", 600)
+    g.add_edge("1", "4", 1000)
+    g.add_edge("3", "4", 450)
+    g.add_edge("2", "3", 650)
+    g.add_edge("2", "5", 900)
+    g.add_edge("3", "6", 800)
+    g.add_edge("4", "6", 800)
+    g.add_edge("4", "7", 750)
+    g.add_edge("5", "6", 650)
+    g.add_edge("6", "7", 1100)
+    g.add_edge("5", "8", 400)
+    g.add_edge("6", "8", 1000)
+    g.add_edge("6", "9", 1200)
+    g.add_edge("8", "9", 550)
+    g.add_edge("7", "9", 700)
+    g.add_edge("7", "11", 750)
+    g.add_edge("7", "10", 850)
+    g.add_edge("9", "10", 450)
+    g.add_edge("9", "12", 750)
+    g.add_edge("8", "12", 1100)
+    g.add_edge("10", "12", 400)
+    g.add_edge("10", "11", 500)
+
+    g.add_heuristica("1", 0)
+    g.add_heuristica("2", 668)
+    g.add_heuristica("3", 491)
+    g.add_heuristica("4", 534)
+    g.add_heuristica("5", 962)
+    g.add_heuristica("6", 1040)
+    g.add_heuristica("7", 1160)
+    g.add_heuristica("8", 1200)
+    g.add_heuristica("9", 1440)
+    g.add_heuristica("10", 1700)
+    g.add_heuristica("11", 1660)
+    g.add_heuristica("12", 1870)
+
+    return g
+
 class Grafo:
 
     def __init__(self, directed=False):
@@ -58,114 +100,4 @@ class Grafo:
         n1 = Node(n)
         if n1 in self.m_nodes:
             self.m_h[n] = estima
-
-
-
-    def imprime_aresta(self):
-        listaA = ""
-        lista = self.m_graph.keys()
-        for nodo in lista:
-            for (nodo2, custo) in self.m_graph[nodo]:
-                listaA = listaA + nodo + " ->" + nodo2 + " custo:" + str(custo) + "\n"
-        return listaA
-
-
-    def calcula_custo(self, caminho):
-        teste = caminho
-        custo = 0
-        i = 0
-        while i + 1 < len(teste):
-            custo = custo + self.get_arc_cost(teste[i], teste[i + 1])
-            i = i + 1
-        return custo
-
-    def procura_DFS(self, start, end, path=[], visited=set()):
-        path.append(start)
-        visited.add(start)
-
-        if start == end:
-            custoT = self.calcula_custo(path)
-            return (path, custoT)
-        for (adjacente, peso) in self.m_graph[start]:
-            if adjacente not in visited:
-                resultado = self.procura_DFS(adjacente, end, path, visited)
-                if resultado is not None:
-                    return resultado
-        path.pop()
-        return None
-
-
-    def procura_BFS(self, start, end):
-        visited = set()
-        fila = Queue()
-        custo = 0
-        fila.put(start)
-        visited.add(start)
-
-        parent = dict()
-        parent[start] = None
-
-        path_found = False
-        while not fila.empty() and path_found == False:
-            nodo_atual = fila.get()
-            if nodo_atual == end:
-                path_found = True
-            else:
-                for (adjacente, peso) in self.m_graph[nodo_atual]:
-                    if adjacente not in visited:
-                        fila.put(adjacente)
-                        parent[adjacente] = nodo_atual
-                        visited.add(adjacente)
-
-
-        path = []
-        if path_found:
-            path.append(end)
-            while parent[end] is not None:
-                path.append(parent[end])
-                end = parent[end]
-            path.reverse()
-            custo = self.calcula_custo(path)
-        return (path, custo)
-
-    def greedy(self, start, end):
-            open_list = set([start])
-            closed_list = set([])
-
-            parents = {}
-            parents[start] = start
-
-            while len(open_list) > 0:
-                n = None
-
-                for v in open_list:
-                    if n is None or self.m_h[v] < self.m_h[n]:
-                        n = v
-
-                if n is None:
-                    print('Path does not exist!')
-                    return None
-
-                if n == end:
-                    reconst_path = []
-
-                    while parents[n] != n:
-                        reconst_path.append(n)
-                        n = parents[n]
-
-                    reconst_path.append(start)
-                    reconst_path.reverse()
-
-                    return (reconst_path, self.calcula_custo(reconst_path))
-
-                for (m, weight) in self.getNeighbours(n):
-                    if m not in open_list and m not in closed_list:
-                        open_list.add(m)
-                        parents[m] = n
-
-                open_list.remove(n)
-                closed_list.add(n)
-
-            print('Path does not exist!')
-            return None
 
