@@ -58,6 +58,7 @@ if __name__ == '__main__':
                         case "2":
                             remover_frota(frota)
                         case "3":
+                            distribuirEncomendas(servicoParaCarros,servico,frota)
                             mostra_frota(frota)
                         case "4":
                             flag_frota = False

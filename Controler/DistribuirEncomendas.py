@@ -1,23 +1,47 @@
 from Model.Encomenda import Encomenda
-from Model.Veiculo import Veiculo
+from Model.Veiculo import Veiculo, Carro, Bicicleta, Mota
 
 
 def separaEncomendas(servico, encomendasParaCarros):
     for s in servico:
-        if s.get_volume() > 198000 or s.get_capacidade() > 20:  # VOLUME MAXIMO DE UMA MOTA/BICICLETA
+        if s.get_volume() > 198000 or s.get_peso() > 20:  # VOLUME MAXIMO DE UMA MOTA/BICICLETA
             encomendasParaCarros.append(s)
             servico.remove(s)
 
-def distribuirEncomendas(servicoParaCarros, servicos, frota):
-    for f in frota:
-        match(type(f)):
 
-            case Carro:
-                while f.get_pesoOcupado() < f.get_capacidade() and f.get_volumeOcupado < f.get_volume:
+def distribuirEncomendas(servicoParaCarros, servicos, frota):
+    separaEncomendas(servicos, servicoParaCarros)
+    for f in frota:
+        match f:
+            case Carro():
+                while f.get_pesoOcupado() < f.get_capacidade() and f.get_volumeOcupado() < f.get_volume():
                     for sc in servicoParaCarros:
-                        if f.get_pesoOcupado() + sc.peso < f.get_capacidade():
-                            f.get_listaEncomendas.append(sc)
-                            return servicoParaCarros.remove(sc)
+                        if f.get_pesoOcupado() + sc.get_peso() < f.get_capacidade() and f.get_volumeOcupado() + sc.get_volume() < f.get_volume():
+                            f.get_listaEncomendas().append(sc)
+                            f.set_pesoOcupado(sc.get_peso() + f.get_pesoOcupado())
+                            f.set_volumeOcupado(sc.get_volume() + f.get_volumeOcupado())
+                            servicoParaCarros.remove(sc)
+                            print("123")
                         else:
-                            for s in servicos:
-                                if f.get_pesoOcupado() + s.peso < f.get_capacidade():
+                            continue
+
+                    for s in servicos:
+                        if f.get_pesoOcupado() + s.get_peso() < f.get_capacidade() and f.get_volumeOcupado() + s.get_volume() < f.get_volume():
+                            f.get_listaEncomendas().append(s)
+                            f.set_pesoOcupado(s.get_peso() + f.get_pesoOcupado())
+                            f.set_volumeOcupado(s.get_volume() + f.get_volumeOcupado())
+                            servicos.remove(s)
+                            print("321")
+                        else:
+                            continue
+
+            case _:
+                while f.get_pesoOcupado() < f.get_capacidade() and f.get_volumeOcupado() < f.get_volume():
+                    for s in servicos:
+                        if f.get_pesoOcupado() + s.get_peso() < f.get_capacidade() and f.get_volumeOcupado() + s.get_volume() < f.get_volume():
+                            f.get_listaEncomendas().append(s)
+                            f.set_pesoOcupado(s.get_peso() + f.get_pesoOcupado())
+                            f.set_volumeOcupado(s.get_volume() + f.get_volumeOcupado())
+                            servicos.remove(s)
+                        else:
+                            continue

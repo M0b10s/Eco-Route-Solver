@@ -1,12 +1,12 @@
 class Veiculo:
     last_id = 1
 
-    def __init__(self, capacidade, velMedia, penalizacaoPorPeso, listaEncomendas, volume, volumeOcupado, pesoOcupado):
+    def __init__(self, capacidade, velMedia, penalizacaoPorPeso, volume, volumeOcupado, pesoOcupado):
         self.capacidade = capacidade
         self.velMedia = velMedia
         self.penalizacaoPorPeso = penalizacaoPorPeso
         self.last_id = Veiculo.last_id
-        self.listaEncomendas = listaEncomendas
+        self.listaEncomendas = []
         self.volume = volume
         self.volumeOcupado = volumeOcupado
         self.pesoOcupado = pesoOcupado
@@ -69,8 +69,8 @@ class Veiculo:
 
 # subclass
 class Carro(Veiculo):
-    def __init__(self, capacidade=100, velMedia=50, penalizacaoPorPeso=0.1, volume=160 * 140 * 110, listaEncomendas=[], volumeOcupado = 0, pesoOcupado = 0):
-        super().__init__(capacidade, velMedia, penalizacaoPorPeso, listaEncomendas, volume, volumeOcupado,pesoOcupado)
+    def __init__(self, capacidade=100, velMedia=50, penalizacaoPorPeso=0.1, volume=160 * 140 * 110,volumeOcupado = 0, pesoOcupado = 0):
+        super().__init__(capacidade, velMedia, penalizacaoPorPeso, volume, volumeOcupado,pesoOcupado)
         self.capacidade = capacidade
         self.velMedia = velMedia
         self.penalizacaoPorPeso = penalizacaoPorPeso
@@ -79,8 +79,8 @@ class Carro(Veiculo):
 
 
 class Mota(Veiculo):
-    def __init__(self, capacidade=20, velMedia=35, penalizacaoPorPeso=0.5, volume=55 * 60 * 60 * 3, listaEncomendas=[], volumeOcupado = 0, pesoOcupado = 0):
-        super().__init__(capacidade, velMedia, penalizacaoPorPeso, listaEncomendas, volume, volumeOcupado, pesoOcupado)
+    def __init__(self, capacidade=20, velMedia=35, penalizacaoPorPeso=0.5, volume=55 * 60 * 60 * 3, volumeOcupado = 0, pesoOcupado = 0):
+        super().__init__(capacidade, velMedia, penalizacaoPorPeso, volume, volumeOcupado, pesoOcupado)
         self.capacidade = capacidade
         self.velMedia = velMedia
         self.penalizacaoPorPeso = penalizacaoPorPeso
@@ -89,8 +89,8 @@ class Mota(Veiculo):
 
 
 class Bicicleta(Veiculo):
-    def __init__(self, capacidade=5, velMedia=10, penalizacaoPorPeso=0.6, volume=55 * 60 * 60, listaEncomendas=[], volumeOcupado = 0, pesoOcupado = 0):
-        super().__init__(capacidade, velMedia, penalizacaoPorPeso, listaEncomendas, volume, volumeOcupado, pesoOcupado)
+    def __init__(self, capacidade=5, velMedia=10, penalizacaoPorPeso=0.6, volume=55 * 60 * 60, volumeOcupado = 0, pesoOcupado = 0):
+        super().__init__(capacidade, velMedia, penalizacaoPorPeso, volume, volumeOcupado, pesoOcupado)
         self.capacidade = capacidade
         self.velMedia = velMedia
         self.penalizacaoPorPeso = penalizacaoPorPeso
