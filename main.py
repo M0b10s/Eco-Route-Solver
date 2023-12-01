@@ -1,3 +1,4 @@
+from Controler.Algoritmos import procura_DFS, devolve_setores
 from Controler.Frota import *
 from Controler.Grafo import cria_grafo
 from Controler.Servico import *
@@ -33,12 +34,15 @@ if __name__ == '__main__':
     flag = True
     flag_frota = True
     flag_enc = True
+    flag_alg = True
+    flag_alg_inside = True
 
     while flag:
 
         clear()
         flag_frota = True
         flag_enc = True
+        flag_alg = True
         print_Menu_Main()
 
         match (input()):
@@ -58,7 +62,6 @@ if __name__ == '__main__':
                         case "2":
                             remover_frota(frota)
                         case "3":
-                            distribuirEncomendas(servicoParaCarros,servico,frota)
                             mostra_frota(frota)
                         case "4":
                             flag_frota = False
@@ -90,7 +93,80 @@ if __name__ == '__main__':
             case "3":
                 consulta_grafo(grafo)
 
-            case "4":  # Menu Principal ==> Opção Sair
+            case "4":
+
+                while flag_alg:
+
+                    distribuirEncomendas(servicoParaCarros, servico, frota)
+                    clear()
+                    print_Menu_Op_Algoritmos()
+                    flag_alg_inside = True
+
+                    match (input()):
+
+                        case "1":
+                            clear()
+                            print_Menu_Algoritmos_Frota()
+
+                            while flag_alg_inside:
+                                match (input()):
+
+                                    case "1":
+                                        for f in frota:
+                                            aVisitar = devolve_setores(f.get_listaEncomendas())
+                                            res = []
+                                            print(procura_DFS(grafo, 1, aVisitar, res))
+                                    case "2":
+                                        "bfs"
+
+                                    case "3":
+                                        "greedy"
+
+                                    case "4":
+                                        "A*"
+
+                                    case "5":
+                                        "todos"
+
+                                    case "6":
+                                        flag_alg_inside = False
+
+                                    case _:
+                                        invalid()
+
+                        case "2":
+                            clear()
+                            # ADICIONAR PRINT DE TODOS OS VEICULOS EM FALTA
+                            print_Menu_Algoritmos_Veiculo()
+
+                            while flag_alg_inside:
+                                match (input()):
+
+                                    case "1":
+                                        "dfs"
+
+                                    case "2":
+                                        "bfs"
+
+                                    case "3":
+                                        "greedy"
+
+                                    case "4":
+                                        "A*"
+
+                                    case "5":
+                                        "todos"
+
+                                    case "6":
+                                        flag_alg_inside = False
+
+                        case "3":
+                            flag_alg = False
+
+                        case _:
+                            invalid()
+
+            case "5":  # Menu Principal ==> Opção Sair
 
                 flag = False
 

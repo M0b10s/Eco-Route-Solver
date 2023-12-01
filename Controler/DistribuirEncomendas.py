@@ -14,14 +14,12 @@ def distribuirEncomendas(servicoParaCarros, servicos, frota):
     for f in frota:
         match f:
             case Carro():
-                while f.get_pesoOcupado() < f.get_capacidade() and f.get_volumeOcupado() < f.get_volume():
                     for sc in servicoParaCarros:
                         if f.get_pesoOcupado() + sc.get_peso() < f.get_capacidade() and f.get_volumeOcupado() + sc.get_volume() < f.get_volume():
                             f.get_listaEncomendas().append(sc)
                             f.set_pesoOcupado(sc.get_peso() + f.get_pesoOcupado())
                             f.set_volumeOcupado(sc.get_volume() + f.get_volumeOcupado())
                             servicoParaCarros.remove(sc)
-                            print("123")
                         else:
                             continue
 
@@ -31,12 +29,10 @@ def distribuirEncomendas(servicoParaCarros, servicos, frota):
                             f.set_pesoOcupado(s.get_peso() + f.get_pesoOcupado())
                             f.set_volumeOcupado(s.get_volume() + f.get_volumeOcupado())
                             servicos.remove(s)
-                            print("321")
                         else:
                             continue
 
             case _:
-                while f.get_pesoOcupado() < f.get_capacidade() and f.get_volumeOcupado() < f.get_volume():
                     for s in servicos:
                         if f.get_pesoOcupado() + s.get_peso() < f.get_capacidade() and f.get_volumeOcupado() + s.get_volume() < f.get_volume():
                             f.get_listaEncomendas().append(s)

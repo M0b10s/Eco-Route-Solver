@@ -6,7 +6,8 @@ def print_Menu_Main():
     print("1 ==> Opções Frota")
     print("2 ==> Opções Encomendas")
     print("3 ==> Consultar Grafo")
-    print("4 ==> Sair")
+    print("4 ==> Iniciar Processamento")
+    print("5 ==> Sair")
 
 
 def print_Menu_Frota():
@@ -24,6 +25,31 @@ def print_Menu_Encomenda():
     print("3 ==> Consultar Encomendas")
     print("4 ==> Gerar 'n' Encomendas Random")
     print("5 ==> Sair de Opções de Encomendas")
+
+
+def print_Menu_Op_Algoritmos():
+    print("==========Escolha a quem pretende aplicar o algoritmo==========")
+    print("1 ==> Frota")
+    print("2 ==> Veiculo")
+    print("3 ==> Sair")
+
+def print_Menu_Algoritmos_Frota():
+    print("==========Opções de Algoritmos(Frota)==========")
+    print("1 ==> DFS")
+    print("2 ==> BFS")
+    print("3 ==> GREEDY")
+    print("4 ==> A*")
+    print("5 ==> TODOS")
+    print("6 ==> Sair de Opções de Algoritmos")
+
+def print_Menu_Algoritmos_Veiculo():
+    print("==========Opções de Algoritmos(Veiculo)==========")
+    print("1 ==> DFS")
+    print("2 ==> BFS")
+    print("3 ==> GREEDY")
+    print("4 ==> A*")
+    print("5 ==> TODOS")
+    print("6 ==> Sair de Opções de Algoritmos")
 
 
 def invalid():
