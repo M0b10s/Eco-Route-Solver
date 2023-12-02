@@ -3,10 +3,15 @@ from Model.Veiculo import Veiculo, Carro, Bicicleta, Mota
 
 
 def separaEncomendas(servico, encomendasParaCarros):
+    encomendas_a_remover = []
+
     for s in servico:
-        if s.get_volume() > 198000 or s.get_peso() > 20:  # VOLUME MAXIMO DE UMA MOTA/BICICLETA
+        if s.get_volume() > 198000 or s.get_peso() > 20:
             encomendasParaCarros.append(s)
-            servico.remove(s)
+            encomendas_a_remover.append(s)
+
+    for s in encomendas_a_remover:
+        servico.remove(s)
 
 
 def distribuirEncomendas(servicoParaCarros, servicos, frota):

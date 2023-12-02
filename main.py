@@ -83,6 +83,7 @@ if __name__ == '__main__':
                             remover_Serv(servico)
                         case "3":
                             mostra_servico(servico)
+                            mostra_servico(servicoParaCarros)
                         case "4":
                             gera_n_rand(servico)
                         case "5":
