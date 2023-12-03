@@ -1,4 +1,4 @@
-from Controler.Algoritmos import procura_DFS, devolve_setores
+from Controler.Algoritmos import *
 from Controler.Frota import *
 from Controler.Grafo import cria_grafo
 from Controler.Servico import *
@@ -28,7 +28,7 @@ organiza_frota(frota)
 # ==============================SYS INIT END
 
 if __name__ == '__main__':
-    # vamos criar um for p  ara percorrer a lista de frota
+    # vamos criar um for para percorrer a lista de frota
 
     # Menu de opções
     flag = True
@@ -94,7 +94,7 @@ if __name__ == '__main__':
             case "3":
                 consulta_grafo(grafo)
 
-            case "4":
+            case "4": # MENU Principal ==> Algoritmos
 
                 while flag_alg:
 
@@ -118,10 +118,12 @@ if __name__ == '__main__':
                                             res = []
                                             print(procura_DFS(grafo, 1, aVisitar, res))
                                     case "2":
+
                                         "bfs"
 
                                     case "3":
-                                        "greedy"
+                                        for f in frota:
+                                            greedy_search(f,grafo)
 
                                     case "4":
                                         "A*"

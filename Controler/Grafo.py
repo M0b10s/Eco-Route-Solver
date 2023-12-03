@@ -106,4 +106,3 @@ class Grafo:
         n1 = Node(n)
         if n1 in self.m_nodes:
             self.m_h[n] = estima
-

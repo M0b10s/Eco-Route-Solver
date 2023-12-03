@@ -1,7 +1,11 @@
 from queue import Queue
 
+from View.Consulta_grafo import consulta_grafo
+from main import grafo
+
 
 # from main import grafo
+
 
 def devolve_setores(servicos):
     setores = set()
@@ -40,34 +44,36 @@ def procura_DFS(grafo, inicio, setores_a_visitar, visitados=None):
     return visitados
 
 
-def procura_BFS(self, start, end):
+def procura_BFS(self, inicio, setores_a_visitar):
     visited = set()
     fila = Queue()
-    custo = 0
-    fila.put(start)
-    visited.add(start)
+
+    fila.put(inicio)
+    visited.add(inicio)
 
     parent = dict()
-    parent[start] = None
+    parent[inicio] = None
 
     path_found = False
-    while not fila.empty() and path_found == False:
+    while not fila.empty() and not path_found:
         nodo_atual = fila.get()
-        if nodo_atual == end:
+        if nodo_atual == setores_a_visitar:
             path_found = True
         else:
-            for (adjacente, peso) in self.m_graph[nodo_atual]:
-                if adjacente not in visited:
-                    fila.put(adjacente)
-                    parent[adjacente] = nodo_atual
-                    visited.add(adjacente)
+            if nodo_atual in self.m_graph:
+                for (adjacente, peso) in self.m_graph[nodo_atual]:
+                    if adjacente not in visited:
+                        fila.put(adjacente)
+                        parent[adjacente] = nodo_atual
+                        visited.add(adjacente)
 
     path = []
+    custo = 0
     if path_found:
-        path.append(end)
-        while parent[end] is not None:
-            path.append(parent[end])
-            end = parent[end]
+        path.append(setores_a_visitar)
+        while parent[setores_a_visitar] is not None:
+            path.append(parent[setores_a_visitar])
+            setores_a_visitar = parent[setores_a_visitar]
         path.reverse()
         custo = self.calcula_custo(path)
     return (path, custo)
@@ -113,3 +119,15 @@ def greedy(self, start, end):
 
     print('Path does not exist!')
     return None
+
+
+def greedy_search(veiculo, grafo):
+    rota = []
+    for nó in veiculo.nos:
+        rota.append(nó)
+        for vizinho in grafo.get_vizinhos(nó):
+            if vizinho not in rota:
+                if vizinho.custo < rota[-1].custo:
+                    rota.insert(rota.index(nó) + 1, vizinho)
+                    break
+    return rota
