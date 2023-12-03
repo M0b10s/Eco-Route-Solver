@@ -45,7 +45,7 @@ if __name__ == '__main__':
         flag_alg = True
         print_Menu_Main()
 
-        match (input()):
+        match(input()):
 
             case "1":  # Menu Principal ==> Opções Frota
 

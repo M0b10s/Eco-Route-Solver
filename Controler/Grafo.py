@@ -76,6 +76,12 @@ class Grafo:
         if not self.m_directed:
             self.m_graph[node2].append((node1, weight))
 
+    def get_nodes(self):
+        return self.m_nodes
+
+    def get_vizinhos(self, node):
+        return [vizinho for vizinho, _ in self.m_graph.get(node, [])]
+
     def desenha(self):
         lista_v = self.m_nodes
         lista_a = []

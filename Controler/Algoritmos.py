@@ -1,6 +1,8 @@
 from queue import Queue
 
 
+# from main import grafo
+
 def devolve_setores(servicos):
     setores = set()
     for s in servicos:
@@ -19,15 +21,20 @@ def calcula_custo(self, caminho):
     return custo
 
 
-def procura_DFS(grafo, inicio, setores_a_visitar, visitados=[]):
-    visitados = visitados.copy()
-    visitados.append(inicio)
+def procura_DFS(grafo, inicio, setores_a_visitar, visitados=None):
+    if visitados is None:
+        visitados = []
 
-    if inicio in setores_a_visitar:
-        setores_a_visitar.remove(inicio)
+    inicio_str = str(inicio)
+    visitados.append(inicio_str)
 
-    for (vizinho, _) in grafo.m_graph.get(inicio, []):
-        if vizinho not in visitados and setores_a_visitar:
+    if inicio_str in setores_a_visitar:
+        setores_a_visitar.remove(inicio_str)
+
+    vizinhos = grafo.get_vizinhos(inicio_str)
+
+    for vizinho in vizinhos:
+        if vizinho not in visitados and len(setores_a_visitar) > 0:
             procura_DFS(grafo, vizinho, setores_a_visitar, visitados)
 
     return visitados
