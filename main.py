@@ -3,7 +3,7 @@ from Controler.Frota import *
 from Controler.Grafo import cria_grafo
 from Controler.Servico import *
 from Controler.DistribuirEncomendas import *
-
+from Controler.Grafo import Grafo
 from View.Consulta_grafo import *
 from View.Consulta_Servico import *
 from View.Menus import *
@@ -115,11 +115,11 @@ if __name__ == '__main__':
                                     case "1":
                                         for f in frota:
                                             aVisitar = devolve_setores(f.get_listaEncomendas())
-                                            res = []
-                                            print(procura_DFS(grafo, 1, aVisitar, res))
+                                            grafo.procura_DFS(aVisitar)
                                     case "2":
-
-                                        "bfs"
+                                        for f in frota:
+                                            aVisitar = devolve_setores(f.get_listaEncomendas())
+                                            grafo.procura_BFS(aVisitar)
 
                                     case "3":
                                         for f in frota:

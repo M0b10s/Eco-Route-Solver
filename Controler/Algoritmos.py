@@ -25,24 +25,6 @@ def calcula_custo(self, caminho):
     return custo
 
 
-def procura_DFS(grafo, inicio, setores_a_visitar, visitados=None):
-    if visitados is None:
-        visitados = []
-
-    inicio_str = str(inicio)
-    visitados.append(inicio_str)
-
-    if inicio_str in setores_a_visitar:
-        setores_a_visitar.remove(inicio_str)
-
-    vizinhos = grafo.get_vizinhos(inicio_str)
-
-    for vizinho in vizinhos:
-        if vizinho not in visitados and len(setores_a_visitar) > 0:
-            procura_DFS(grafo, vizinho, setores_a_visitar, visitados)
-
-    return visitados
-
 
 def procura_BFS(self, inicio, setores_a_visitar):
     visited = set()
