@@ -10,3 +10,10 @@ def mostra_frota(frota):
     print()
     siga()
     input()
+
+def mostra_frota_semEnc(frota):
+    spacer()
+    for v in frota:
+        v.display()
+    print("\n")
+    spacer()

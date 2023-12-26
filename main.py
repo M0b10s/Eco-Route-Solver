@@ -107,29 +107,64 @@ if __name__ == '__main__':
 
                         case "1":
                             clear()
-                            print_Menu_Algoritmos_Frota()
 
                             while flag_alg_inside:
+                                print_Menu_Algoritmos_Frota()
                                 match (input()):
 
                                     case "1":
+                                        print_Menu_Algoritmos_DFS()
                                         for f in frota:
                                             aVisitar = devolve_setores(f.get_listaEncomendas())
+                                            print("\n")
+                                            print("Setores a visitar: ")
+                                            print(aVisitar)
                                             grafo.procura_DFS(aVisitar)
                                     case "2":
+                                        print_Menu_Algoritmos_BFS()
                                         for f in frota:
                                             aVisitar = devolve_setores(f.get_listaEncomendas())
+                                            print("\n")
+                                            print("Setores a visitar: ")
+                                            print(aVisitar)
                                             grafo.procura_BFS(aVisitar)
 
                                     case "3":
+                                        print_Menu_Algoritmos_GREEDY()
                                         for f in frota:
-                                            greedy_search(f,grafo)
+                                            aVisitar = devolve_setores(f.get_listaEncomendas())
+                                            print("\n")
+                                            print("Setores a visitar: ")
+                                            print(aVisitar)
+                                            grafo.procura_greedy(aVisitar)
 
                                     case "4":
-                                        "A*"
+                                        print_Menu_Algoritmos_ASTAR()
+                                        for f in frota:
+                                            aVisitar = devolve_setores(f.get_listaEncomendas())
+                                            print("\n")
+                                            print("Setores a visitar: ")
+                                            print(aVisitar)
+                                            grafo.procura_aStar(aVisitar)
 
                                     case "5":
-                                        "todos"
+                                        for f in frota:
+                                            print_Menu_Algoritmos_TODOS()
+                                            aVisitar = devolve_setores(f.get_listaEncomendas())
+                                            print("\n")
+                                            print("Setores a visitar: ")
+                                            print(aVisitar)
+                                            print_Menu_Algoritmos_DFS()
+                                            grafo.procura_DFS(aVisitar)
+
+                                            print_Menu_Algoritmos_BFS()
+                                            grafo.procura_BFS(aVisitar)
+
+                                            print_Menu_Algoritmos_GREEDY()
+                                            grafo.procura_greedy(aVisitar)
+
+                                            print_Menu_Algoritmos_ASTAR()
+                                            grafo.procura_aStar(aVisitar)
 
                                     case "6":
                                         flag_alg_inside = False
@@ -139,26 +174,71 @@ if __name__ == '__main__':
 
                         case "2":
                             clear()
-                            # ADICIONAR PRINT DE TODOS OS VEICULOS EM FALTA
-                            print_Menu_Algoritmos_Veiculo()
+                            veiculo_selecionado = None
+                            while veiculo_selecionado is None:
+                                mostra_frota_semEnc(frota)
+                                id = int(input("Qual o id do veiculo a que deseja aplicar o algoritmo?\n"))
+                                for veiculo in frota:
+                                    if veiculo.get_last_id() == id:
+                                        veiculo_selecionado = veiculo
+                                        break
+
+                                if veiculo_selecionado is None:
+                                    print("O veiculo com o id selecionado não está disponivel!")
 
                             while flag_alg_inside:
+                                print_Menu_Algoritmos_Veiculo()
                                 match (input()):
 
                                     case "1":
-                                        "dfs"
+                                        print_Menu_Algoritmos_DFS()
+                                        aVisitar = devolve_setores(veiculo_selecionado.get_listaEncomendas())
+                                        print("\n")
+                                        print("Setores a visitar: ")
+                                        print(aVisitar)
+                                        grafo.procura_DFS(aVisitar)
 
                                     case "2":
-                                        "bfs"
+                                        print_Menu_Algoritmos_BFS()
+                                        aVisitar = devolve_setores(veiculo_selecionado.get_listaEncomendas())
+                                        print("\n")
+                                        print("Setores a visitar: ")
+                                        print(aVisitar)
+                                        grafo.procura_BFS(aVisitar)
 
                                     case "3":
-                                        "greedy"
+                                        print_Menu_Algoritmos_GREEDY()
+                                        aVisitar = devolve_setores(veiculo_selecionado.get_listaEncomendas())
+                                        print("\n")
+                                        print("Setores a visitar: ")
+                                        print(aVisitar)
+                                        grafo.procura_greedy(aVisitar)
 
                                     case "4":
-                                        "A*"
+                                        print_Menu_Algoritmos_ASTAR()
+                                        aVisitar = devolve_setores(veiculo_selecionado.get_listaEncomendas())
+                                        print("\n")
+                                        print("Setores a visitar: ")
+                                        print(aVisitar)
+                                        grafo.procura_aStar(aVisitar)
 
                                     case "5":
-                                        "todos"
+                                        print_Menu_Algoritmos_TODOS()
+                                        aVisitar = devolve_setores(veiculo_selecionado.get_listaEncomendas())
+                                        print("\n")
+                                        print("Setores a visitar: ")
+                                        print(aVisitar)
+                                        print_Menu_Algoritmos_DFS()
+                                        grafo.procura_DFS(aVisitar)
+
+                                        print_Menu_Algoritmos_BFS()
+                                        grafo.procura_BFS(aVisitar)
+
+                                        print_Menu_Algoritmos_GREEDY()
+                                        grafo.procura_greedy(aVisitar)
+
+                                        print_Menu_Algoritmos_ASTAR()
+                                        grafo.procura_aStar(aVisitar)
 
                                     case "6":
                                         flag_alg_inside = False

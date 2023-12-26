@@ -106,6 +106,18 @@ class Grafo:
     def get_vizinhos(self, node):
         return [vizinho for vizinho, _ in self.m_graph.get(node, [])]
 
+    def getNeighbours(self, nodo):
+        lista = []
+        for (adjacente, peso) in self.m_graph[nodo]:
+            lista.append((adjacente, peso))
+        return lista
+
+    def getH(self, nodo):
+        if nodo not in self.m_h.keys():
+            return 1000
+        else:
+            return (self.m_h[nodo])
+
     def desenha(self):
         lista_v = self.m_nodes
         lista_a = []
@@ -170,10 +182,7 @@ class Grafo:
         res = []
         setores_a_visitar = list(setores_a_visitar)
 
-        print(setores_a_visitar)
-
         for i in range(len(setores_a_visitar)):
-            print(i)
             if i == 0:
                 start = "1"
                 end = setores_a_visitar[i]
@@ -234,10 +243,6 @@ class Grafo:
         res = []
         setores_a_visitar = list(setores_a_visitar)
 
-        print("\n")
-        print("Setores a visitar: ")
-        print(setores_a_visitar)
-
         for i in range(len(setores_a_visitar)):
             if i == 0:
                 start = "1"
@@ -261,7 +266,7 @@ class Grafo:
     #    A*
     ##########################################
 
-    def procura_aStar(self, start, end):
+    def procura_aStar_aux(self, start, end):
         # open_list is a list of nodes which have been visited, but who's neighbors
         # haven't all been inspected, starts off with the start node
         # closed_list is a list of nodes which have been visited
@@ -336,11 +341,34 @@ class Grafo:
         print('Path does not exist!')
         return None
 
+    def procura_aStar(self, setores_a_visitar):
+        res = []
+        setores_a_visitar = list(setores_a_visitar)
+
+        for i in range(len(setores_a_visitar)):
+            if i == 0:
+                start = "1"
+                end = setores_a_visitar[i]
+            else:
+                start = setores_a_visitar[i - 1]
+                end = setores_a_visitar[i]
+
+            resultado = self.procura_aStar_aux(str(start), str(end))
+
+            if resultado is not None:
+                res.append(resultado)
+
+        caminho_combinado, custo_total = somar_caminhos(res)
+        print(f"Caminho combinado: {caminho_combinado}")
+        print(f"Custo total: {custo_total}")
+
+        return res
+
     ##########################################
     #   Greedy
     ##########################################
 
-    def greedy(self, start, end):
+    def greedy_aux(self, start, end):
         # open_list é uma lista de nodos visitados, mas com vizinhos
         # que ainda não foram todos visitados, começa com o  start
         # closed_list é uma lista de nodos visitados
@@ -396,6 +424,29 @@ class Grafo:
 
         print('Path does not exist!')
         return None
+
+    def procura_greedy(self, setores_a_visitar):
+        res = []
+        setores_a_visitar = list(setores_a_visitar)
+
+        for i in range(len(setores_a_visitar)):
+            if i == 0:
+                start = "1"
+                end = setores_a_visitar[i]
+            else:
+                start = setores_a_visitar[i - 1]
+                end = setores_a_visitar[i]
+
+            resultado = self.greedy_aux(str(start), str(end))
+
+            if resultado is not None:
+                res.append(resultado)
+
+        caminho_combinado, custo_total = somar_caminhos(res)
+        print(f"Caminho combinado: {caminho_combinado}")
+        print(f"Custo total: {custo_total}")
+
+        return res
 
 
 def somar_caminhos(lista_caminhos):

@@ -34,6 +34,7 @@ def print_Menu_Op_Algoritmos():
     print("3 ==> Sair")
 
 def print_Menu_Algoritmos_Frota():
+    print("\n")
     print("==========Opções de Algoritmos(Frota)==========")
     print("1 ==> DFS")
     print("2 ==> BFS")
@@ -43,6 +44,7 @@ def print_Menu_Algoritmos_Frota():
     print("6 ==> Sair de Opções de Algoritmos")
 
 def print_Menu_Algoritmos_Veiculo():
+    print("\n")
     print("==========Opções de Algoritmos(Veiculo)==========")
     print("1 ==> DFS")
     print("2 ==> BFS")
@@ -51,6 +53,25 @@ def print_Menu_Algoritmos_Veiculo():
     print("5 ==> TODOS")
     print("6 ==> Sair de Opções de Algoritmos")
 
+def print_Menu_Algoritmos_DFS():
+    print("\n")
+    print("==========ALGORTIMO DFS==========")
+
+def print_Menu_Algoritmos_BFS():
+    print("\n")
+    print("==========ALGORTIMO BFS==========")
+
+def print_Menu_Algoritmos_GREEDY():
+    print("\n")
+    print("==========ALGORTIMO GREEDY==========")
+
+def print_Menu_Algoritmos_ASTAR():
+    print("\n")
+    print("==========ALGORTIMO A*==========")
+
+def print_Menu_Algoritmos_TODOS():
+    print("\n")
+    print("==========TODOS OS ALGORITMOS==========")
 
 def invalid():
     print("Opção Inválida")
