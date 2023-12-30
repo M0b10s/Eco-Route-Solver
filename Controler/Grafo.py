@@ -161,26 +161,31 @@ class Grafo:
 
         return custoT
 
+    def procura_DFS_aux(self, start, end, path=[], visited=None):
+        if visited is None:
+            visited = set()
 
-    def procura_DFS_aux(self, start, end, path=[], visited=set()):
         path.append(start)
         visited.add(start)
 
         if start == end:
-            # calcular o custo do caminho funçao calcula custo.
+            # Calcular o custo do caminho usando a função que você já possui
             custoT = self.calcula_custo(path)
             return (path, custoT)
+
         for (adjacente, peso) in self.m_graph[start]:
             if adjacente not in visited:
                 resultado = self.procura_DFS_aux(adjacente, end, path, visited)
                 if resultado is not None:
                     return resultado
-        path.pop()  # se nao encontra remover o que está no caminho......
+
+        path.pop()  # Se não encontrar, remover o que está no caminho...
         return None
 
     def procura_DFS(self, setores_a_visitar):
         res = []
         setores_a_visitar = list(setores_a_visitar)
+        visited = set()
 
         for i in range(len(setores_a_visitar)):
             if i == 0:
@@ -190,7 +195,7 @@ class Grafo:
                 start = setores_a_visitar[i - 1]
                 end = setores_a_visitar[i]
 
-            resultado = self.procura_DFS_aux(str(start), str(end), path=[], visited=set())
+            resultado = self.procura_DFS_aux(str(start), str(end), path=[], visited=visited)
 
             if resultado is not None:
                 res.append(resultado)
@@ -266,39 +271,30 @@ class Grafo:
     #    A*
     ##########################################
 
-    def procura_aStar_aux(self, start, end):
-        # open_list is a list of nodes which have been visited, but who's neighbors
-        # haven't all been inspected, starts off with the start node
-        # closed_list is a list of nodes which have been visited
-        # and who's neighbors have been inspected
+    def procura_aStar_aux(self, start, end, visited=None):
+        if visited is None:
+            visited = set()
+
         open_list = {start}
         closed_list = set([])
 
-        # g contains current distances from start_node to all other nodes
-        # the default value (if it's not found in the map) is +infinity
-        g = {}  ##  g é apra substiruir pelo peso  ???
-
+        g = {}
         g[start] = 0
 
-        # parents contains an adjacency map of all nodes
         parents = {}
         parents[start] = start
-        # n = None
+
         while len(open_list) > 0:
-            # find a node with the lowest value of f() - evaluation function
             n = None
 
-            # find a node with the lowest value of f() - evaluation function
             for v in open_list:
-                ##if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
-                if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
+                if n is None or g[v] + self.getH(v) < g[n] + self.getH(n):
                     n = v
-            if n == None:
+
+            if n is None:
                 print('Path does not exist!')
                 return None
 
-            # if the current node is the stop_node
-            # then we begin reconstructin the path from it to the start_node
             if n == end:
                 reconst_path = []
 
@@ -307,23 +303,16 @@ class Grafo:
                     n = parents[n]
 
                 reconst_path.append(start)
-
                 reconst_path.reverse()
 
                 return (reconst_path, self.calcula_custo(reconst_path))
 
-            # for all neighbors of the current node do
-            for (m, weight) in self.getNeighbours(n):  # definir função getneighbours  tem de ter um par nodo peso
-                # if the current node isn't in both open_list and closed_list
-                # add it to open_list and note n as it's parent
-                if m not in open_list and m not in closed_list:
+            for (m, weight) in self.getNeighbours(n):
+                if m not in open_list and m not in closed_list and m not in visited:
                     open_list.add(m)
                     parents[m] = n
                     g[m] = g[n] + weight
 
-                # otherwise, check if it's quicker to first visit n, then m
-                # and if it is, update parent data and g data
-                # and if the node was in the closed_list, move it to open_list
                 else:
                     if g[m] > g[n] + weight:
                         g[m] = g[n] + weight
@@ -333,10 +322,10 @@ class Grafo:
                             closed_list.remove(m)
                             open_list.add(m)
 
-            # remove n from the open_list, and add it to closed_list
-            # because all of his neighbors were inspected
             open_list.remove(n)
             closed_list.add(n)
+
+            visited.add(n)  # Adiciona o nodo corrente à lista de visitados
 
         print('Path does not exist!')
         return None
@@ -344,6 +333,7 @@ class Grafo:
     def procura_aStar(self, setores_a_visitar):
         res = []
         setores_a_visitar = list(setores_a_visitar)
+        visited = set()
 
         for i in range(len(setores_a_visitar)):
             if i == 0:
@@ -353,7 +343,7 @@ class Grafo:
                 start = setores_a_visitar[i - 1]
                 end = setores_a_visitar[i]
 
-            resultado = self.procura_aStar_aux(str(start), str(end))
+            resultado = self.procura_aStar_aux(str(start), str(end), visited=visited)
 
             if resultado is not None:
                 res.append(resultado)
@@ -368,34 +358,27 @@ class Grafo:
     #   Greedy
     ##########################################
 
-    def greedy_aux(self, start, end):
-        # open_list é uma lista de nodos visitados, mas com vizinhos
-        # que ainda não foram todos visitados, começa com o  start
-        # closed_list é uma lista de nodos visitados
-        # e todos os seus vizinhos também já o foram
+    def greedy_aux(self, start, end, visited=None):
+        if visited is None:
+            visited = set()
+
         open_list = set([start])
         closed_list = set([])
 
-        # parents é um dicionário que mantém o antecessor de um nodo
-        # começa com start
         parents = {}
         parents[start] = start
 
         while len(open_list) > 0:
             n = None
 
-            # encontra nodo com a menor heuristica
             for v in open_list:
-                if n == None or self.m_h[v] < self.m_h[n]:
+                if n is None or self.m_h[v] < self.m_h[n]:
                     n = v
 
-            if n == None:
+            if n is None:
                 print('Path does not exist!')
                 return None
 
-            # se o nodo corrente é o destino
-            # reconstruir o caminho a partir desse nodo até ao start
-            # seguindo o antecessor
             if n == end:
                 reconst_path = []
 
@@ -408,19 +391,16 @@ class Grafo:
                 reconst_path.reverse()
 
                 return (reconst_path, self.calcula_custo(reconst_path))
-            # para todos os vizinhos  do nodo corrente
 
             for (m, weight) in self.getNeighbours(n):
-                # Se o nodo corrente nao esta na open nem na closed list
-                # adiciona-lo à open_list e marcar o antecessor
-                if m not in open_list and m not in closed_list:
+                if m not in open_list and m not in closed_list and m not in visited:
                     open_list.add(m)
                     parents[m] = n
 
-            # remover n da open_list e adiciona-lo à closed_list
-            # porque todos os seus vizinhos foram inspecionados
             open_list.remove(n)
             closed_list.add(n)
+
+            visited.add(n)  # Adiciona o nodo corrente à lista de visitados
 
         print('Path does not exist!')
         return None
@@ -428,6 +408,7 @@ class Grafo:
     def procura_greedy(self, setores_a_visitar):
         res = []
         setores_a_visitar = list(setores_a_visitar)
+        visited = set()
 
         for i in range(len(setores_a_visitar)):
             if i == 0:
@@ -437,7 +418,7 @@ class Grafo:
                 start = setores_a_visitar[i - 1]
                 end = setores_a_visitar[i]
 
-            resultado = self.greedy_aux(str(start), str(end))
+            resultado = self.greedy_aux(str(start), str(end), visited=visited)
 
             if resultado is not None:
                 res.append(resultado)
