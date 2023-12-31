@@ -38,7 +38,12 @@ if __name__ == '__main__':
     flag_alg_inside = True
 
     while flag:
+        # Calcular distâncias
+        #distances = grafo.calculate_distances()
 
+        # Exibir as distâncias
+        #for (node1, node2), distance in distances.items():
+            #print(f"Distância entre {node1} e {node2}: {distance} km")
         clear()
         flag_frota = True
         flag_enc = True
@@ -50,7 +55,6 @@ if __name__ == '__main__':
             case "1":  # Menu Principal ==> Opções Frota
 
                 while flag_frota:
-
                     clear()
                     print_Menu_Frota()
 

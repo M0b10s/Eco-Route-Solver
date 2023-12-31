@@ -1,7 +1,7 @@
-from Model.Node import Node
+from Model.Node import Node, haversine_distance
 import math
 from queue import Queue
-
+from math import radians, sin, cos, sqrt, atan2
 import networkx as nx  # biblioteca de tratamento de grafos necessária para desnhar graficamente o grafo
 import matplotlib.pyplot as plt  # idem
 import osmnx as ox
@@ -9,13 +9,28 @@ import osmnx as ox
 def cria_grafo():
     g = Grafo()
 
+    # Adiciona nodes com coordenadas
+    g.add_node("1", 41.5598, -8.3925)
+    g.add_node("2", 41.5656, -8.3953)
+    g.add_node("3", 41.5641, -8.3918)
+    g.add_node("4", 41.5625, -8.3869)
+    g.add_node("5", 41.5686, -8.3914)
+    g.add_node("6", 41.5679, -8.3869)
+    g.add_node("7", 41.566, -8.3811)
+    g.add_node("8", 41.5706, -8.3889)
+    g.add_node("9", 41.5706, -8.3825)
+    g.add_node("10", 41.5728, -8.3792)
+    g.add_node("11", 41.5694, -8.3769)
+    g.add_node("12", 41.5744, -8.3811)
+
+    # Adiciona arestas
     g.add_edge("1", "2", 1500)
     g.add_edge("1", "3", 600)
     g.add_edge("1", "4", 1000)
     g.add_edge("3", "4", 450)
+    g.add_edge("3", "6", 800)
     g.add_edge("2", "3", 650)
     g.add_edge("2", "5", 900)
-    g.add_edge("3", "6", 800)
     g.add_edge("4", "6", 800)
     g.add_edge("4", "7", 750)
     g.add_edge("5", "6", 650)
@@ -23,82 +38,56 @@ def cria_grafo():
     g.add_edge("5", "8", 400)
     g.add_edge("6", "8", 1000)
     g.add_edge("6", "9", 1200)
+    g.add_edge("8", "12", 1100)
     g.add_edge("8", "9", 550)
     g.add_edge("7", "9", 700)
-    g.add_edge("7", "11", 750)
     g.add_edge("7", "10", 850)
+    g.add_edge("7", "11", 750)
     g.add_edge("9", "10", 450)
     g.add_edge("9", "12", 750)
-    g.add_edge("8", "12", 1100)
-    g.add_edge("10", "12", 400)
     g.add_edge("10", "11", 500)
-
-    g.add_edge("2", "1", 1500)
-    g.add_edge("3", "1", 600)
-    g.add_edge("4", "1", 1000)
-    g.add_edge("4", "3", 450)
-    g.add_edge("3", "2", 650)
-    g.add_edge("5", "2", 900)
-    g.add_edge("6", "3", 800)
-    g.add_edge("6", "4", 800)
-    g.add_edge("7", "4", 750)
-    g.add_edge("6", "5", 650)
-    g.add_edge("7", "6", 1100)
-    g.add_edge("8", "5", 400)
-    g.add_edge("8", "6", 1000)
-    g.add_edge("9", "6", 1200)
-    g.add_edge("9", "8", 550)
-    g.add_edge("9", "7", 700)
-    g.add_edge("11", "7", 750)
-    g.add_edge("10", "7", 850)
-    g.add_edge("10", "9", 450)
-    g.add_edge("12", "9", 750)
-    g.add_edge("12", "8", 1100)
-    g.add_edge("12", "10", 400)
-    g.add_edge("11", "10", 500)
-
-    g.add_heuristica("1", 0)
-    g.add_heuristica("2", 668)
-    g.add_heuristica("3", 491)
-    g.add_heuristica("4", 534)
-    g.add_heuristica("5", 962)
-    g.add_heuristica("6", 1040)
-    g.add_heuristica("7", 1160)
-    g.add_heuristica("8", 1200)
-    g.add_heuristica("9", 1440)
-    g.add_heuristica("10", 1700)
-    g.add_heuristica("11", 1660)
-    g.add_heuristica("12", 1870)
+    g.add_edge("10", "12", 400)
 
     return g
 
 class Grafo:
-
     def __init__(self, directed=False):
         self.m_nodes = []
         self.m_directed = directed
         self.m_graph = {}
         self.m_h = {}
 
+    def add_node(self, node_name, latitude, longitude):
+        node = Node(node_name, latitude, longitude)
+        if node not in self.m_nodes:
+            node_id = len(self.m_nodes)
+            node.setId(node_id)
+            self.m_nodes.append(node)
+            self.m_graph[node_name] = []
+
     def add_edge(self, node1, node2, weight):
         n1 = Node(node1)
         n2 = Node(node2)
         if n1 not in self.m_nodes:
-            n1_id = len(self.m_nodes)  # numeração sequencial
-            n1.setId(n1_id)
-            self.m_nodes.append(n1)
-            self.m_graph[node1] = []
-
+            raise ValueError(f"Node {node1} não encontrado no grafo. Adicione o nó antes de adicionar a aresta.")
         if n2 not in self.m_nodes:
-            n2_id = len(self.m_nodes)  # numeração sequencial
-            n2.setId(n2_id)
-            self.m_nodes.append(n2)
-            self.m_graph[node2] = []
+            raise ValueError(f"Node {node2} não encontrado no grafo. Adicione o nó antes de adicionar a aresta.")
 
-        self.m_graph[node1].append((node2, weight))  # poderia ser n1 para trabalhar com nodos no grafo
+        self.m_graph[node1].append((node2, weight))
 
         if not self.m_directed:
             self.m_graph[node2].append((node1, weight))
+
+    def calculate_distances(self, end):
+        for i in range(len(self.m_nodes)):
+            node1 = self.m_nodes[i]
+            node2 = self.m_nodes[int(end)-1]
+            distance = haversine_distance(
+                node1.getlatitude(), node1.getlongitude(),
+                node2.getlatitude(), node2.getlongitude()
+            )
+            #print(distance)
+            self.add_heuristica(node1, distance)
 
     def get_nodes(self):
         return self.m_nodes
@@ -161,44 +150,41 @@ class Grafo:
 
         return custoT
 
-    def procura_DFS_aux(self, start, end, path=[], visited=None):
-        if visited is None:
-            visited = set()
-
+    def procura_DFS_aux(self, start, end, path=[], visited=set()):
         path.append(start)
         visited.add(start)
 
         if start == end:
-            # Calcular o custo do caminho usando a função que você já possui
+            # calcular o custo do caminho funçao calcula custo.
             custoT = self.calcula_custo(path)
             return (path, custoT)
-
         for (adjacente, peso) in self.m_graph[start]:
             if adjacente not in visited:
                 resultado = self.procura_DFS_aux(adjacente, end, path, visited)
                 if resultado is not None:
                     return resultado
-
-        path.pop()  # Se não encontrar, remover o que está no caminho...
+        path.pop()  # se nao encontra remover o que está no caminho......
         return None
 
     def procura_DFS(self, setores_a_visitar):
+        global end
+        resultado = ([],)
         res = []
         setores_a_visitar = list(setores_a_visitar)
-        visited = set()
 
         for i in range(len(setores_a_visitar)):
-            if i == 0:
-                start = "1"
-                end = setores_a_visitar[i]
-            else:
-                start = setores_a_visitar[i - 1]
-                end = setores_a_visitar[i]
+            if str(setores_a_visitar[i]) not in resultado[0]:
+                if i == 0:
+                    start = "1"
+                    end = setores_a_visitar[i]
+                else:
+                    start = end
+                    end = setores_a_visitar[i]
 
-            resultado = self.procura_DFS_aux(str(start), str(end), path=[], visited=visited)
+                resultado = self.procura_DFS_aux(str(start), str(end), path=[], visited=set())
 
-            if resultado is not None:
-                res.append(resultado)
+                if resultado is not None:
+                    res.append(resultado)
 
         caminho_combinado, custo_total = somar_caminhos(res)
         print(f"Caminho combinado: {caminho_combinado}")
@@ -267,34 +253,44 @@ class Grafo:
 
         return res
 
+
     ##########################################
     #    A*
     ##########################################
 
-    def procura_aStar_aux(self, start, end, visited=None):
-        if visited is None:
-            visited = set()
-
+    def procura_aStar_aux(self, start, end):
+        # open_list is a list of nodes which have been visited, but who's neighbors
+        # haven't all been inspected, starts off with the start node
+        # closed_list is a list of nodes which have been visited
+        # and who's neighbors have been inspected
         open_list = {start}
         closed_list = set([])
 
-        g = {}
+        # g contains current distances from start_node to all other nodes
+        # the default value (if it's not found in the map) is +infinity
+        g = {}  ##  g é apra substiruir pelo peso  ???
+
         g[start] = 0
 
+        # parents contains an adjacency map of all nodes
         parents = {}
         parents[start] = start
-
+        # n = None
         while len(open_list) > 0:
+            # find a node with the lowest value of f() - evaluation function
             n = None
 
+            # find a node with the lowest value of f() - evaluation function
             for v in open_list:
-                if n is None or g[v] + self.getH(v) < g[n] + self.getH(n):
+                ##if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
+                if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
                     n = v
-
-            if n is None:
+            if n == None:
                 print('Path does not exist!')
                 return None
 
+            # if the current node is the stop_node
+            # then we begin reconstructin the path from it to the start_node
             if n == end:
                 reconst_path = []
 
@@ -303,16 +299,23 @@ class Grafo:
                     n = parents[n]
 
                 reconst_path.append(start)
+
                 reconst_path.reverse()
 
                 return (reconst_path, self.calcula_custo(reconst_path))
 
-            for (m, weight) in self.getNeighbours(n):
-                if m not in open_list and m not in closed_list and m not in visited:
+            # for all neighbors of the current node do
+            for (m, weight) in self.getNeighbours(n):  # definir função getneighbours  tem de ter um par nodo peso
+                # if the current node isn't in both open_list and closed_list
+                # add it to open_list and note n as it's parent
+                if m not in open_list and m not in closed_list:
                     open_list.add(m)
                     parents[m] = n
                     g[m] = g[n] + weight
 
+                # otherwise, check if it's quicker to first visit n, then m
+                # and if it is, update parent data and g data
+                # and if the node was in the closed_list, move it to open_list
                 else:
                     if g[m] > g[n] + weight:
                         g[m] = g[n] + weight
@@ -322,28 +325,39 @@ class Grafo:
                             closed_list.remove(m)
                             open_list.add(m)
 
+            # remove n from the open_list, and add it to closed_list
+            # because all of his neighbors were inspected
             open_list.remove(n)
             closed_list.add(n)
-
-            visited.add(n)  # Adiciona o nodo corrente à lista de visitados
 
         print('Path does not exist!')
         return None
 
     def procura_aStar(self, setores_a_visitar):
+        global resultado
         res = []
+        resultado = ([],)
         setores_a_visitar = list(setores_a_visitar)
-        visited = set()
 
         for i in range(len(setores_a_visitar)):
-            if i == 0:
-                start = "1"
-                end = setores_a_visitar[i]
-            else:
-                start = setores_a_visitar[i - 1]
-                end = setores_a_visitar[i]
+            if str(setores_a_visitar[i]) not in resultado[0]:
+                if i == 0:
+                    start = "1"
+                    end = setores_a_visitar[i]
+                else:
+                    start = end
+                    end = setores_a_visitar[i]
 
-            resultado = self.procura_aStar_aux(str(start), str(end), visited=visited)
+                self.calculate_distances(end)
+                #print("Heurísticas após o cálculo:")
+                #for node, heuristic in self.m_h.items():
+                #    print(f"Nó {node.getName()}: {heuristic}")
+                #print("\n")
+
+                resultado = self.procura_aStar_aux(str(start), str(end))
+
+                #print(resultado)
+                #print("\n") # 1 2 4 5 6 7 9 12
 
             if resultado is not None:
                 res.append(resultado)
@@ -354,32 +368,38 @@ class Grafo:
 
         return res
 
-
     ##########################################
     #   Greedy
     ##########################################
 
-    def greedy_aux(self, start, end, visited=None):
-        if visited is None:
-            visited = set()
-
+    def greedy_aux(self, start, end):
+        # open_list é uma lista de nodos visitados, mas com vizinhos
+        # que ainda não foram todos visitados, começa com o  start
+        # closed_list é uma lista de nodos visitados
+        # e todos os seus vizinhos também já o foram
         open_list = set([start])
         closed_list = set([])
 
+        # parents é um dicionário que mantém o antecessor de um nodo
+        # começa com start
         parents = {}
         parents[start] = start
 
         while len(open_list) > 0:
             n = None
 
+            # encontra nodo com a menor heuristica
             for v in open_list:
-                if n is None or self.m_h[v] < self.m_h[n]:
+                if n == None or self.m_h[v] < self.m_h[n]:
                     n = v
 
-            if n is None:
+            if n == None:
                 print('Path does not exist!')
                 return None
 
+            # se o nodo corrente é o destino
+            # reconstruir o caminho a partir desse nodo até ao start
+            # seguindo o antecessor
             if n == end:
                 reconst_path = []
 
@@ -392,34 +412,48 @@ class Grafo:
                 reconst_path.reverse()
 
                 return (reconst_path, self.calcula_custo(reconst_path))
+            # para todos os vizinhos  do nodo corrente
 
             for (m, weight) in self.getNeighbours(n):
-                if m not in open_list and m not in closed_list and m not in visited:
+                # Se o nodo corrente nao esta na open nem na closed list
+                # adiciona-lo à open_list e marcar o antecessor
+                if m not in open_list and m not in closed_list:
                     open_list.add(m)
                     parents[m] = n
 
+            # remover n da open_list e adiciona-lo à closed_list
+            # porque todos os seus vizinhos foram inspecionados
             open_list.remove(n)
             closed_list.add(n)
-
-            visited.add(n)  # Adiciona o nodo corrente à lista de visitados
 
         print('Path does not exist!')
         return None
 
     def procura_greedy(self, setores_a_visitar):
+        global resultado
         res = []
+        resultado = ([],)
         setores_a_visitar = list(setores_a_visitar)
-        visited = set()
 
         for i in range(len(setores_a_visitar)):
-            if i == 0:
-                start = "1"
-                end = setores_a_visitar[i]
-            else:
-                start = setores_a_visitar[i - 1]
-                end = setores_a_visitar[i]
+            if str(setores_a_visitar[i]) not in resultado[0]:
+                if i == 0:
+                    start = "1"
+                    end = setores_a_visitar[i]
+                else:
+                    start = end
+                    end = setores_a_visitar[i]
 
-            resultado = self.greedy_aux(str(start), str(end), visited=visited)
+                self.calculate_distances(end)
+                #print("Heurísticas após o cálculo:")
+                #for node, heuristic in self.m_h.items():
+                #    print(f"Nó {node.getName()}: {heuristic}")
+                #print("\n")
+
+                resultado = self.greedy_aux(str(start), str(end))
+
+                #print(resultado)
+                #print("\n")
 
             if resultado is not None:
                 res.append(resultado)
@@ -432,11 +466,14 @@ class Grafo:
 
 
 def somar_caminhos(lista_caminhos):
+    if not lista_caminhos:
+        return [], 0
+
     caminho_combinado = []
     custo_total = 0
 
     for caminho, custo in lista_caminhos:
-        caminho_combinado.extend(caminho[:-1])  # Exclui o último nó do caminho para evitar duplicatas
+        caminho_combinado.extend(caminho[:-1])  # Adiciona todos os nós, exceto o último do caminho
         custo_total += custo
 
     caminho_combinado.append(lista_caminhos[-1][0][-1])  # Adiciona o último nó do último caminho
