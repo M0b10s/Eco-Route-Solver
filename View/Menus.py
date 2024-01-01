@@ -15,7 +15,8 @@ def print_Menu_Frota():
     print("1 ==> Adicionar á Frota")
     print("2 ==> Remover da Frota")
     print("3 ==> Consultar a Frota")
-    print("4 ==> Sair de Opções de Frota")
+    print("4 ==> Consultar os Estafetas")
+    print("5 ==> Sair de Opções de Frota")
 
 
 def print_Menu_Encomenda():
@@ -25,7 +26,6 @@ def print_Menu_Encomenda():
     print("3 ==> Consultar Encomendas")
     print("4 ==> Gerar 'n' Encomendas Random")
     print("5 ==> Sair de Opções de Encomendas")
-
 
 def print_Menu_Op_Algoritmos():
     print("==========Escolha a quem pretende aplicar o algoritmo==========")
@@ -76,6 +76,19 @@ def print_Menu_Algoritmos_TODOS():
 def invalid():
     print("Opção Inválida")
     input()
+
+def melhor_algoritmo(nr):
+
+    match (nr):
+
+        case 0:
+            print("Algoritmo escolhido: DFS!")
+        case 1:
+            print("Algoritmo escolhido: BFS!")
+        case 2:
+            print("Algoritmo escolhido: GREEDY!")
+        case 3:
+            print("Algoritmo escolhido: A*!")
 
 
 def clear():

@@ -5,6 +5,8 @@ from math import radians, sin, cos, sqrt, atan2
 import networkx as nx  # biblioteca de tratamento de grafos necessária para desnhar graficamente o grafo
 import matplotlib.pyplot as plt  # idem
 import osmnx as ox
+from Model.Veiculo import *
+
 
 def cria_grafo():
     g = Grafo()
@@ -50,6 +52,7 @@ def cria_grafo():
 
     return g
 
+
 class Grafo:
     def __init__(self, directed=False):
         self.m_nodes = []
@@ -81,12 +84,12 @@ class Grafo:
     def calculate_distances(self, end):
         for i in range(len(self.m_nodes)):
             node1 = self.m_nodes[i]
-            node2 = self.m_nodes[int(end)-1]
+            node2 = self.m_nodes[int(end) - 1]
             distance = haversine_distance(
                 node1.getlatitude(), node1.getlongitude(),
                 node2.getlatitude(), node2.getlongitude()
             )
-            #print(distance)
+            # print(distance)
             self.add_heuristica(node1, distance)
 
     def get_nodes(self):
@@ -150,23 +153,29 @@ class Grafo:
 
         return custoT
 
-    def procura_DFS_aux(self, start, end, path=[], visited=set()):
+    def procura_DFS_aux(self, veiculo, start, end, path=None, visited=None):
+        if path is None:
+            path = []
+        if visited is None:
+            visited = set()
         path.append(start)
         visited.add(start)
 
         if start == end:
             # calcular o custo do caminho funçao calcula custo.
             custoT = self.calcula_custo(path)
-            return (path, custoT)
+            return path, custoT
+
         for (adjacente, peso) in self.m_graph[start]:
             if adjacente not in visited:
-                resultado = self.procura_DFS_aux(adjacente, end, path, visited)
+                resultado = self.procura_DFS_aux(veiculo, adjacente, end, path, visited)
                 if resultado is not None:
                     return resultado
+
         path.pop()  # se nao encontra remover o que está no caminho......
         return None
 
-    def procura_DFS(self, setores_a_visitar):
+    def procura_DFS(self, setores_a_visitar, veiculo):
         global end
         resultado = ([],)
         res = []
@@ -181,14 +190,16 @@ class Grafo:
                     start = end
                     end = setores_a_visitar[i]
 
-                resultado = self.procura_DFS_aux(str(start), str(end), path=[], visited=set())
+                resultado = self.procura_DFS_aux(veiculo, str(start), str(end), path=[], visited=set())
 
                 if resultado is not None:
                     res.append(resultado)
 
         caminho_combinado, custo_total = somar_caminhos(res)
+
         print(f"Caminho combinado: {caminho_combinado}")
         print(f"Custo total: {custo_total}")
+        print(f"Tempo de entrega: {calcula_tempo(custo_total, veiculo):.2f} minutos.")
 
         return res
 
@@ -230,7 +241,7 @@ class Grafo:
             custo = self.calcula_custo(path)
         return (path, custo)
 
-    def procura_BFS(self, setores_a_visitar):
+    def procura_BFS(self, setores_a_visitar, veiculo):
         res = []
         setores_a_visitar = list(setores_a_visitar)
 
@@ -248,11 +259,12 @@ class Grafo:
                 res.append(resultado)
 
         caminho_combinado, custo_total = somar_caminhos(res)
+
         print(f"Caminho combinado: {caminho_combinado}")
         print(f"Custo total: {custo_total}")
+        print(f"Tempo de entrega: {calcula_tempo(custo_total, veiculo):.2f} minutos.")
 
         return res
-
 
     ##########################################
     #    A*
@@ -333,7 +345,7 @@ class Grafo:
         print('Path does not exist!')
         return None
 
-    def procura_aStar(self, setores_a_visitar):
+    def procura_aStar(self, setores_a_visitar, veiculo):
         global resultado
         res = []
         resultado = ([],)
@@ -349,22 +361,23 @@ class Grafo:
                     end = setores_a_visitar[i]
 
                 self.calculate_distances(end)
-                #print("Heurísticas após o cálculo:")
-                #for node, heuristic in self.m_h.items():
+                # print("Heurísticas após o cálculo:")
+                # for node, heuristic in self.m_h.items():
                 #    print(f"Nó {node.getName()}: {heuristic}")
-                #print("\n")
+                # print("\n")
 
                 resultado = self.procura_aStar_aux(str(start), str(end))
 
-                #print(resultado)
-                #print("\n") # 1 2 4 5 6 7 9 12
+
 
             if resultado is not None:
                 res.append(resultado)
 
         caminho_combinado, custo_total = somar_caminhos(res)
+
         print(f"Caminho combinado: {caminho_combinado}")
         print(f"Custo total: {custo_total}")
+        print(f"Tempo de entrega: {calcula_tempo(custo_total, veiculo):.2f} minutos.")
 
         return res
 
@@ -429,7 +442,7 @@ class Grafo:
         print('Path does not exist!')
         return None
 
-    def procura_greedy(self, setores_a_visitar):
+    def procura_greedy(self, setores_a_visitar, veiculo):
         global resultado
         res = []
         resultado = ([],)
@@ -445,22 +458,24 @@ class Grafo:
                     end = setores_a_visitar[i]
 
                 self.calculate_distances(end)
-                #print("Heurísticas após o cálculo:")
-                #for node, heuristic in self.m_h.items():
+                # print("Heurísticas após o cálculo:")
+                # for node, heuristic in self.m_h.items():
                 #    print(f"Nó {node.getName()}: {heuristic}")
-                #print("\n")
+                # print("\n")
 
                 resultado = self.greedy_aux(str(start), str(end))
 
-                #print(resultado)
-                #print("\n")
+                # print(resultado)
+                # print("\n")
 
             if resultado is not None:
                 res.append(resultado)
 
         caminho_combinado, custo_total = somar_caminhos(res)
+
         print(f"Caminho combinado: {caminho_combinado}")
         print(f"Custo total: {custo_total}")
+        print(f"Tempo de entrega: {calcula_tempo(custo_total, veiculo):.2f} minutos.")
 
         return res
 
@@ -479,3 +494,47 @@ def somar_caminhos(lista_caminhos):
     caminho_combinado.append(lista_caminhos[-1][0][-1])  # Adiciona o último nó do último caminho
 
     return caminho_combinado, custo_total
+
+
+def calcula_tempo(custo, veiculo):
+    velocidade_media = veiculo.get_velMedia()
+    peso_ocupado = veiculo.get_pesoOcupado()
+    penalizacao = veiculo.get_penalizacaoPorPeso()
+
+    # vel.med -> km
+    # custo -> M
+
+    velocidade_media -= (peso_ocupado * penalizacao)
+
+    velocidade_media *= 1000
+
+    return (custo / velocidade_media) * 60
+
+
+def avaliar_estafeta(veiculo, custo_total):
+    tempo_de_entrega = calcula_tempo(custo_total, veiculo)
+    soma_tempos = 0
+    contador_lista = 0
+
+    for enc in veiculo.get_listaEncomendas():
+        contador_lista += 1
+        soma_tempos += Encomenda.get_tempoEntrega(enc)
+
+    media_tempo = soma_tempos / contador_lista
+
+    rating_estafeta = veiculo.get_estafeta().get_rating()
+
+    if tempo_de_entrega <= media_tempo:
+        diferenca_tempo = media_tempo - tempo_de_entrega
+        novo_rating = min(5, rating_estafeta + diferenca_tempo / 60)
+        veiculo.get_estafeta().set_rating(novo_rating)
+        print(f"Tempo de entrega menor ou igual à média! {diferenca_tempo:.2f} minutos antecipado. \nRating atualizado: {novo_rating:.2f}")
+
+    else:
+        diferenca_tempo = tempo_de_entrega - media_tempo
+        penalizacao = max(0, diferenca_tempo / 60)
+        novo_rating = max(0, rating_estafeta - penalizacao)
+        veiculo.get_estafeta().set_rating(novo_rating)
+        print(f"Tempo de entrega maior que a média! Demorados {diferenca_tempo:.2f} minutos a mais. \nRating atualizado: {novo_rating:.2f}")
+
+
