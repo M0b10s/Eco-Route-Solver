@@ -96,6 +96,7 @@ def remover_Estafeta(estafetas,id_rem):
 
 
 def gera_n_rand(servico):
+
     try:
         n = 0
         print("Quantas Encomendas deseja gerar?")
