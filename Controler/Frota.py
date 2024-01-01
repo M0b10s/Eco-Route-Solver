@@ -1,25 +1,29 @@
 from Model.Veiculo import Carro, Mota, Bicicleta
 from View.Menus import *
+from Model.Estafeta import *
+import random
 
-
-def criar_frota(tipo, qtd, frota):
+def criar_frota(tipo, qtd, frota, estafetas):
     if tipo == "Carro":
         for i in range(qtd):
             v = Carro()
             frota.append(v)
+            v.set_estafeta(gera_random_estafeta(v, estafetas))
 
     elif tipo == "Mota":
         for i in range(qtd):
             v = Mota()
             frota.append(v)
+            v.set_estafeta(gera_random_estafeta(v, estafetas))
 
     elif tipo == "Bicicleta":
         for i in range(qtd):
             v = Bicicleta()
             frota.append(v)
+            v.set_estafeta(gera_random_estafeta(v, estafetas))
 
 
-def adicionar_frota_ui(frota):
+def adicionar_frota_ui(frota,estafetas):
     spacer()
     tipo = ""
     quantidade = 0
@@ -38,7 +42,7 @@ def adicionar_frota_ui(frota):
         siga()
         input()
 
-    criar_frota(tipo, quantidade, frota)
+    criar_frota(tipo, quantidade, frota, estafetas)
     print("Sucesso!")
     print(f"Foram criadas {quantidade} {tipo}"f"s")
     siga()
@@ -52,15 +56,15 @@ def remover_frota(frota):
     id_rem = int(input())
     i = 0
     for v in frota:
-        if v.get_id() == id_rem:
+        if v.get_last_id() == id_rem:
             frota = frota.pop(i)
         i += 1
 
 
-def sys_default_frota(frota):
-    criar_frota("Carro", 1, frota,)
-    criar_frota("Mota", 2, frota)
-    criar_frota("Bicicleta", 3, frota)
+def sys_default_frota(frota, estafetas):
+    criar_frota("Carro", 1, frota, estafetas)
+    criar_frota("Mota", 2, frota, estafetas)
+    criar_frota("Bicicleta", 3, frota, estafetas)
 
 
 def organiza_frota(frota):
@@ -80,3 +84,15 @@ def organiza_frota(frota):
     frota.extend(frota_bicicleta)
     frota.extend(frota_mota)
     frota.extend(frota_carro)
+
+
+def gera_random_estafeta(veiculo, estafetas):
+    id = len(estafetas) + 1
+    idade = random.randint(18, 65)
+    peso = random.randint(50, 150)
+    ranking = 5
+
+    estafeta = Estafeta(id, idade, peso, ranking, veiculo)
+    estafetas.append(estafeta)
+
+    return estafeta

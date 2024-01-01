@@ -71,9 +71,10 @@ def criar_Serv(servico):
     e = Encomenda(peso, dest, comprimento, largura, altura, tempoEntrega * 60)
 
     servico.append(e)
+    organiza_servico(servico)
 
 
-def remover_Serv(servicos):
+def remover_Serv(servicos,estafetas):
     for v in servicos:
         v.display()
     print("Qual o Id a remover?")
@@ -82,7 +83,16 @@ def remover_Serv(servicos):
     for v in servicos:
         if v.get_id() == id_rem:
             servicos = servicos.pop(i)
+            remover_Estafeta(estafetas, id_rem)
         i += 1
+
+def remover_Estafeta(estafetas,id_rem):
+    for e in estafetas:
+        print(e.get_veiculo().get_last_id())
+        print(id_rem)
+        if e.get_veiculo().get_last_id() == id_rem:
+            estafetas.pop(e)
+        input()
 
 
 def gera_n_rand(servico):
@@ -102,7 +112,12 @@ def gera_n_rand(servico):
         altura = random.randint(1, 110)
         comprimento = random.randint(1, 160)
         largura = random.randint(1, 140)
-        tempoEntrega = random.randint(1, 1440)
+        tempoEntrega = random.randint(1, 100)
 
         e = Encomenda(peso, dest, comprimento, largura, altura, tempoEntrega)
         servico.append(e)
+
+
+def organiza_servico(servico):
+    servico_organizado = sorted(servico, key=lambda encomenda: encomenda.tempoEntrega)
+    return servico_organizado
