@@ -1,3 +1,4 @@
+from Model.Encomenda import Encomenda
 from Model.Node import Node, haversine_distance
 import math
 from queue import Queue
