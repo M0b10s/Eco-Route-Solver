@@ -84,7 +84,7 @@ if __name__ == '__main__':
                             criar_Serv(servico)
                             servico.sort(key=lambda encomenda: encomenda.tempoEntrega)
                         case "2":
-                            remover_Serv(servico,estafetas)
+                            remover_Serv(servico, estafetas)
                         case "3":
                             mostra_servico(servico)
                             mostra_servico(servicoParaCarros)
